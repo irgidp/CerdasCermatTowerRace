@@ -1,0 +1,55 @@
+# questions.yml - Database soal Math Tower Race
+# Format:
+#   questions:
+#     <id>:
+#       soal: "pertanyaan yang ditampilkan ke player"
+#       jawaban: "jawaban (harus angka atau teks sesuai soal)"
+#
+# Tips: id soal bebas, bisa angka atau nama, tapi harus unik
+
+questions:
+  q1:
+    soal: "Berapa hasil dari 7 x 8?"
+    jawaban: "56"
+  q2:
+    soal: "Berapa hasil dari 15 + 27?"
+    jawaban: "42"
+  q3:
+    soal: "Berapa hasil dari 100 - 37?"
+    jawaban: "63"
+  q4:
+    soal: "Berapa hasil dari 9 x 9?"
+    jawaban: "81"
+  q5:
+    soal: "Berapa hasil dari 144 / 12?"
+    jawaban: "12"
+  q6:
+    soal: "Berapa hasil dari 25 x 4?"
+    jawaban: "100"
+  q7:
+    soal: "Berapa hasil dari 13 + 19 + 8?"
+    jawaban: "40"
+  q8:
+    soal: "Berapa hasil dari 200 - 75?"
+    jawaban: "125"
+  q9:
+    soal: "Berapa hasil dari 6 x 7 + 2?"
+    jawaban: "44"
+  q10:
+    soal: "Berapa hasil dari 81 / 9?"
+    jawaban: "9"
+  q11:
+    soal: "Berapa hasil dari 12 x 12?"
+    jawaban: "144"
+  q12:
+    soal: "Berapa hasil dari 500 / 25?"
+    jawaban: "20"
+  q13:
+    soal: "Berapa hasil dari 17 x 3?"
+    jawaban: "51"
+  q14:
+    soal: "Berapa hasil dari 999 - 888?"
+    jawaban: "111"
+  q15:
+    soal: "Berapa hasil dari 36 / 6 x 7?"
+    jawaban: "42"
