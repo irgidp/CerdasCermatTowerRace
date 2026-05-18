@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
@@ -35,7 +36,8 @@ public class ArrowListener implements Listener {
         if (gp == null || !gp.isAlive()) return;
 
         var newItem = player.getInventory().getItem(event.getNewSlot());
-        boolean holdingBow = newItem != null && newItem.getType() == org.bukkit.Material.BOW;
+        boolean holdingBow = (newItem != null && newItem.getType() == org.bukkit.Material.BOW)
+                || player.getInventory().getItemInOffHand().getType() == org.bukkit.Material.BOW;
 
         if (holdingBow) {
             // Jalankan shake jika player baru mengganti ke item Bow dan belum ada task berjalan
@@ -44,6 +46,27 @@ public class ArrowListener implements Listener {
             }
         } else {
             // Langsung matikan efek shake detik itu juga saat ganti ke item lain
+            stopCameraShake(player.getUniqueId());
+        }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        if (!gm.isGameActive()) return;
+        Player player = event.getPlayer();
+        GamePlayer gp = gm.getGamePlayerByPlayer(player);
+        if (gp == null || !gp.isAlive()) return;
+
+        var held = player.getInventory().getItemInMainHand();
+        var offhand = player.getInventory().getItemInOffHand();
+        boolean holdingBow = (held != null && held.getType() == org.bukkit.Material.BOW)
+                || (offhand != null && offhand.getType() == org.bukkit.Material.BOW);
+
+        if (holdingBow) {
+            if (!shakingTasks.containsKey(player.getUniqueId())) {
+                startCameraShake(player);
+            }
+        } else {
             stopCameraShake(player.getUniqueId());
         }
     }
@@ -64,7 +87,10 @@ public class ArrowListener implements Listener {
 
             // Validasi: Jika item di tangan utama bukan BOW lagi, matikan task
             var held = player.getInventory().getItemInMainHand();
-            if (held.getType() != org.bukkit.Material.BOW) {
+            var offhand = player.getInventory().getItemInOffHand();
+            boolean holdingBow = (held != null && held.getType() == org.bukkit.Material.BOW)
+                    || (offhand != null && offhand.getType() == org.bukkit.Material.BOW);
+            if (!holdingBow) {
                 stopCameraShake(uuid);
                 return;
             }

@@ -34,6 +34,7 @@ public class GameManager {
     private final Map<String, String> playerAnswers = new LinkedHashMap<>();
     // Timer task untuk timeout 15 detik
     private org.bukkit.scheduler.BukkitTask timeoutTask = null;
+    private org.bukkit.scheduler.BukkitTask questionCountdownTask = null;
     // Apakah soal sudah ditutup (timeout/semua jawab)
     private boolean questionClosed = false;
 
@@ -280,6 +281,7 @@ public class GameManager {
 
         // Cancel timeout soal sebelumnya
         if (timeoutTask != null && !timeoutTask.isCancelled()) timeoutTask.cancel();
+        if (questionCountdownTask != null && !questionCountdownTask.isCancelled()) questionCountdownTask.cancel();
 
         currentQuestion   = q;
         questionStartTime = System.currentTimeMillis();
@@ -302,22 +304,50 @@ public class GameManager {
         // Bot jawab otomatis
         botManager.triggerBotAnswers(q);
 
+        startQuestionCountdown();
+
         // Timeout sesuai timer — tutup soal, tampilkan recap, lalu lava langsung naik
-        timeoutTask = Bukkit.getScheduler().runTaskLater(plugin, this::closeQuestion, (long) questionTimeSeconds * 20L);
+        timeoutTask = Bukkit.getScheduler().runTaskLater(plugin, () -> closeQuestion(true), (long) questionTimeSeconds * 20L);
 
         return null;
     }
 
-    /** Dipanggil saat 15 detik habis atau semua player sudah jawab */
-    public void closeQuestion() {
+    private void startQuestionCountdown() {
+        if (questionCountdownTask != null && !questionCountdownTask.isCancelled()) questionCountdownTask.cancel();
+        final int[] remaining = {questionTimeSeconds};
+
+        questionCountdownTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            if (!gameActive || questionClosed || remaining[0] <= 0) {
+                if (questionCountdownTask != null && !questionCountdownTask.isCancelled()) {
+                    questionCountdownTask.cancel();
+                }
+                return;
+            }
+
+            String timeFormatted = String.format("%02d", remaining[0]);
+            Bukkit.getOnlinePlayers().forEach(p ->
+                    p.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR,
+                            new net.md_5.bungee.api.chat.TextComponent("§6§lWAKTU MENJAWAB: §e" + timeFormatted + "s")));
+
+            remaining[0]--;
+        }, 0L, 20L);
+    }
+
+    /** Dipanggil saat timer habis atau semua player sudah jawab */
+    public void closeQuestion(boolean timeExpired) {
         if (questionClosed) return;
         questionClosed = true;
 
         if (timeoutTask != null && !timeoutTask.isCancelled()) timeoutTask.cancel();
+        if (questionCountdownTask != null && !questionCountdownTask.isCancelled()) questionCountdownTask.cancel();
         botManager.cancelAllTasks();
 
         Question q = currentQuestion;
         if (q == null) return;
+
+        if (timeExpired) {
+            Bukkit.broadcastMessage("§6§lWAKTU HABIS!");
+        }
 
         // Tampilkan rekap jawaban
         Bukkit.broadcastMessage("§e§l════════ WAKTU HABIS / RECAP ════════");
@@ -335,10 +365,22 @@ public class GameManager {
                         + (gp.isBot() ? " §7[BOT]" : "")
                         + " §fmenjawab §f" + jawaban + " " + (benar ? "§a✓" : "§c✗"));
             } else if (!gp.isBot()) {
-                Bukkit.broadcastMessage("  §7" + gp.getPlayerName() + " tidak menjawab.");
+                gp.resetStreak();
+                lowerPlatform(gp, 1);
+                Bukkit.broadcastMessage("  §7" + gp.getPlayerName() + " tidak menjawab §c(−1 block)§7.");
             }
         }
         Bukkit.broadcastMessage("§e§l══════════════════════════════");
+
+        // Bonus lava jika banyak yang menjawab benar
+        long aliveReal = registeredPlayers.values().stream()
+                .filter(g -> g.isAlive() && !g.isBot()).count();
+        long correctReal = registeredPlayers.values().stream()
+                .filter(g -> g.isAlive() && !g.isBot() && answeredThisQuestion.contains(g.getPlayerName())).count();
+        if (aliveReal > 0 && correctReal >= Math.ceil(aliveReal * 0.7)) {
+            this.nextLavaRise += 1;
+            Bukkit.broadcastMessage("§c§l🔥 Bonus lava +1 (banyak jawaban benar)!");
+        }
 
         // Reward streak lalu lava langsung naik
         checkStreakRewardForAll();
@@ -392,7 +434,7 @@ public class GameManager {
         if (aliveReal > 0 && answered >= aliveReal) {
             // Semua player asli sudah jawab, tutup soal segera di main thread
             if (!questionClosed) {
-                Bukkit.getScheduler().runTask(plugin, this::closeQuestion);
+                Bukkit.getScheduler().runTask(plugin, () -> closeQuestion(false));
             }
         }
     }
@@ -547,6 +589,8 @@ public class GameManager {
         if (gp.isBot()) return;
 
         int streak = gp.getCorrectStreak();
+        if (streak <= 0) return;
+
         Player p = gp.getPlayer();
         if (p == null || !p.isOnline()) return;
 
@@ -729,6 +773,7 @@ public class GameManager {
 
     public void resetGame() {
         if (timeoutTask != null && !timeoutTask.isCancelled()) timeoutTask.cancel();
+        if (questionCountdownTask != null && !questionCountdownTask.isCancelled()) questionCountdownTask.cancel();
         cleanupBlocks();
         // removeGameRestrictions();
         // Remove semua villager bot
