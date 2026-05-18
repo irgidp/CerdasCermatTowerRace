@@ -9,44 +9,44 @@ commands:
   regis:
     description: Register player asli ke game
     usage: /regis <playername>
-    permission: mathtower.admin
+    permission: cerdasCermatTowerRace.admin
   unregis:
     description: Unregister player dari game
     usage: /unregis <playername>
-    permission: mathtower.admin
+    permission: cerdasCermatTowerRace.admin
   addbot:
     description: Tambahkan bot simulasi ke game
     usage: /addbot <nama> [easy|medium|hard|random]
-    permission: mathtower.admin
+    permission: cerdasCermatTowerRace.admin
   removebot:
     description: Hapus bot dari game
     usage: /removebot <nama>
-    permission: mathtower.admin
+    permission: cerdasCermatTowerRace.admin
   listplayer:
     description: Lihat daftar semua player + bot beserta score
     usage: /listplayer
-    permission: mathtower.admin
+    permission: cerdasCermatTowerRace.admin
   startboard:
     description: Spawn pijakan sesuai jumlah player/bot yang terdaftar
     usage: /startboard
-    permission: mathtower.admin
+    permission: cerdasCermatTowerRace.admin
   startgame:
     description: Mulai game session
     usage: /startgame
-    permission: mathtower.admin
+    permission: cerdasCermatTowerRace.admin
   setsoal:
     description: Set soal untuk semua player (bot jawab otomatis)
     usage: /setsoal <question_id>
-    permission: mathtower.admin
+    permission: cerdasCermatTowerRace.admin
   resetgame:
     description: Reset game dan bersihkan arena
     usage: /resetgame
-    permission: mathtower.admin
+    permission: cerdasCermatTowerRace.admin
 
 permissions:
-  mathtower.admin:
-    description: Admin commands untuk Math Tower Race
+  cerdasCermatTowerRace.admin:
+    description: Admin commands untuk Cerdas Cermat Tower Race
     default: op
-  mathtower.player:
+  cerdasCermatTowerRace.player:
     description: Player biasa
     default: true
