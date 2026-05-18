@@ -38,6 +38,10 @@ commands:
     description: Set soal untuk semua player (bot jawab otomatis)
     usage: /setsoal <question_id>
     permission: cerdasCermatTowerRace.admin
+  settimer:
+    description: Atur durasi timer soal (detik)
+    usage: /settimer <seconds>
+    permission: cerdasCermatTowerRace.admin
   resetgame:
     description: Reset game dan bersihkan arena
     usage: /resetgame

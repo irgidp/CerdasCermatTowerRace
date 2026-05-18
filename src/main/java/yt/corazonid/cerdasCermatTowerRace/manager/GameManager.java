@@ -32,10 +32,14 @@ public class GameManager {
     private final Set<String> answeredThisQuestion = new HashSet<>();
     // Simpan jawaban tiap player untuk ditampilkan saat timeout
     private final Map<String, String> playerAnswers = new LinkedHashMap<>();
-    // Timer task untuk timeout 25 detik
+    // Timer task untuk timeout 15 detik
     private org.bukkit.scheduler.BukkitTask timeoutTask = null;
     // Apakah soal sudah ditutup (timeout/semua jawab)
     private boolean questionClosed = false;
+
+    private int questionTimeSeconds = 15;
+    private static final int MIN_QUESTION_TIME_SECONDS = 5;
+    private static final int MAX_QUESTION_TIME_SECONDS = 60;
 
     // State
     private boolean gameActive   = false;
@@ -123,6 +127,15 @@ public class GameManager {
     public Location getBoardOrigin()                       { return boardOrigin; }
     public Set<String> getQuestionIds()                    { return questions.keySet(); }
     public boolean isQuestionClosed()                      { return questionClosed; }
+    public int getQuestionTimeSeconds()                    { return questionTimeSeconds; }
+
+    public String setQuestionTimeSeconds(int seconds) {
+        if (seconds < MIN_QUESTION_TIME_SECONDS || seconds > MAX_QUESTION_TIME_SECONDS) {
+            return "§cTimer harus antara " + MIN_QUESTION_TIME_SECONDS + " dan " + MAX_QUESTION_TIME_SECONDS + " detik.";
+        }
+        this.questionTimeSeconds = seconds;
+        return null;
+    }
 
     public GamePlayer getGamePlayerByPlayer(Player player) {
         return registeredPlayers.get(player.getName());
@@ -282,20 +295,20 @@ public class GameManager {
         Bukkit.broadcastMessage("§b§l══════════════════════════════");
         Bukkit.broadcastMessage("§b§l  📐 SOAL #" + questionNumber);
         Bukkit.broadcastMessage("§f  " + q.getSoal());
-        Bukkit.broadcastMessage("§7  Ketik jawaban langsung di chat! (maks §e25 detik§7)");
+        Bukkit.broadcastMessage("§7  Ketik jawaban langsung di chat! (maks §e" + questionTimeSeconds + " detik§7)");
         Bukkit.broadcastMessage("§c  🌋 Lava akan naik §f" + this.nextLavaRise + " §cblock setelah soal ini!");
         Bukkit.broadcastMessage("§b§l══════════════════════════════");
 
         // Bot jawab otomatis
         botManager.triggerBotAnswers(q);
 
-        // Timeout 25 detik — tutup soal, tampilkan recap, gacha, naikkan lava
-        timeoutTask = Bukkit.getScheduler().runTaskLater(plugin, this::closeQuestion, 25 * 20L);
+        // Timeout sesuai timer — tutup soal, tampilkan recap, lalu lava langsung naik
+        timeoutTask = Bukkit.getScheduler().runTaskLater(plugin, this::closeQuestion, (long) questionTimeSeconds * 20L);
 
         return null;
     }
 
-    /** Dipanggil saat 25 detik habis atau semua player sudah jawab */
+    /** Dipanggil saat 15 detik habis atau semua player sudah jawab */
     public void closeQuestion() {
         if (questionClosed) return;
         questionClosed = true;
@@ -327,12 +340,9 @@ public class GameManager {
         }
         Bukkit.broadcastMessage("§e§l══════════════════════════════");
 
-        // Gacha item untuk semua player hidup (bukan bot) setelah 1 detik
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            gachaItemForAll();
-            // Naikkan lava setelah gacha (2 detik lagi)
-            Bukkit.getScheduler().runTaskLater(plugin, this::raiseLavaForQuestion, 40L);
-        }, 20L);
+        // Reward streak lalu lava langsung naik
+        checkStreakRewardForAll();
+        raiseLavaForQuestion();
     }
 
     // ═══ PROSES JAWABAN PLAYER ASLI ═══════════════════════════════════════════
@@ -352,17 +362,20 @@ public class GameManager {
         playerAnswers.put(playerName, message);
 
         if (!currentQuestion.isCorrect(message)) {
-            // Jawaban salah — sembunyikan dari chat tapi tidak ada feedback
+            // Jawaban salah — reset streak & tidak ada feedback
+            gp.resetStreak();  // ← RESET STREAK saat jawab salah
             return true;
         }
 
         // BENAR!
         answeredThisQuestion.add(playerName);
+        gp.incrementStreak();  // ← INCREMENT STREAK saat jawab benar
+
         long   ms      = System.currentTimeMillis() - questionStartTime;
         double sec     = ms / 1000.0;
         int    blocks  = calculateBlocksUp(sec);
 
-        Bukkit.broadcastMessage("§a✓ §f" + playerName + " §atelah menjawab dengan benar! §7(+" + blocks + " block, " + String.format("%.1f", sec) + "s)");
+        Bukkit.broadcastMessage("§a✓ §f" + playerName + " §atelah menjawab dengan benar! §7(+" + blocks + " block, " + String.format("%.1f", sec) + "s) §7[Streak: §e" + gp.getCorrectStreak() + "§7]");
         if (blocks > 0) raisePlatform(gp, blocks);
 
         // Cek apakah semua player hidup sudah jawab → tutup soal lebih cepat
@@ -377,9 +390,9 @@ public class GameManager {
         long answered  = registeredPlayers.values().stream()
                 .filter(g -> g.isAlive() && !g.isBot() && answeredThisQuestion.contains(g.getPlayerName())).count();
         if (aliveReal > 0 && answered >= aliveReal) {
-            // Semua player asli sudah jawab, tutup soal setelah 2 detik
+            // Semua player asli sudah jawab, tutup soal segera di main thread
             if (!questionClosed) {
-                Bukkit.getScheduler().runTaskLater(plugin, this::closeQuestion, 40L);
+                Bukkit.getScheduler().runTask(plugin, this::closeQuestion);
             }
         }
     }
@@ -403,11 +416,13 @@ public class GameManager {
     // ═══ HITUNG BLOCK NAIK ════════════════════════════════════════════════════
 
     private int calculateBlocksUp(double seconds) {
-        if (seconds < 5)  return 5;
-        if (seconds < 10) return 4;
-        if (seconds < 15) return 3;
-        if (seconds < 20) return 2;
-        if (seconds < 25) return 1;
+        int maxSeconds = Math.max(MIN_QUESTION_TIME_SECONDS, questionTimeSeconds);
+        double step = maxSeconds / 5.0;
+        if (seconds < step)        return 5;
+        if (seconds < step * 2.0)  return 4;
+        if (seconds < step * 3.0)  return 3;
+        if (seconds < step * 4.0)  return 2;
+        if (seconds < step * 5.0)  return 1;
         return 0;
     }
 
@@ -520,50 +535,48 @@ public class GameManager {
     // ═══ GACHA ITEM ════════════════════════════════════════════════════════════
 
     /**
-     * Gacha item untuk semua player hidup (bukan bot).
-     * 60% snowball → kurangi pijakan musuh 1 block (kena player)
-     * 40% bow+arrow → kurangi pijakan musuh 3 block (kena player), efek shake kamera
+     * REMOVED: Gacha system replaced with streak-based rewards
+     *
+     * NEW SYSTEM:
+     * - Streak 3 benar → +1 Snowball
+     * - Streak 5 benar → +1 Bow + Arrow
+     * - Streak 6 benar → +2 Snowball + 1 Bow+Arrow (dari milestone 3, 6, dan 5)
      */
-    private void gachaItemForAll() {
-        List<GamePlayer> alivePlayers = registeredPlayers.values().stream()
-                .filter(g -> g.isAlive() && !g.isBot()).toList();
-        if (alivePlayers.isEmpty()) return;
 
-        Random rng = new Random();
-        ArrowListener arrowListener = null;
-        for (RegisteredListener rl : org.bukkit.event.player.PlayerItemHeldEvent.getHandlerList().getRegisteredListeners()) {
-            if (rl.getListener() instanceof ArrowListener al) {
-                arrowListener = al;
-                break;
-            }
+    private void checkStreakReward(GamePlayer gp) {
+        if (gp.isBot()) return;
+
+        int streak = gp.getCorrectStreak();
+        Player p = gp.getPlayer();
+        if (p == null || !p.isOnline()) return;
+
+        // Check setiap milestone (3, 6, 9... dan 5, 10, 15...)
+        // Milestone 3 (every 3)
+        if (streak % 3 == 0 && !gp.hasRewardedStreak(streak)) {
+            p.getInventory().addItem(new ItemStack(Material.SNOWBALL, 1));
+            gp.markStreakReward(streak);
+            Bukkit.broadcastMessage("§b❄ " + gp.getPlayerName() + " §amendapat §fSnowball§a! (Streak: §e" + streak + "§a)");
         }
-        for (GamePlayer gp : alivePlayers) {
-            Player p = gp.getPlayer();
-            if (p == null || !p.isOnline()) continue;
 
-            boolean getBow = rng.nextInt(100) < 40; // 40% bow, 60% snowball
-
-            if (getBow) {
-                // Bow 1 durability + 1 arrow
-                ItemStack bow = new ItemStack(Material.BOW);
-                ItemMeta meta = bow.getItemMeta();
-                meta.setUnbreakable(false);
-                // Set damage supaya tinggal 1 durability (durability max bow = 384)
-                if (meta instanceof org.bukkit.inventory.meta.Damageable dmg) {
-                    dmg.setDamage(383); // 384 - 1 = tinggal 1 hit
-                }
-                bow.setItemMeta(meta);
-                p.getInventory().addItem(bow);
-                p.getInventory().addItem(new ItemStack(Material.ARROW, 1));
-                Bukkit.broadcastMessage("§e🏹 " + gp.getPlayerName() + " mendapatkan §6Bow & Arrow§e!");
-                if (arrowListener != null && p.getInventory().getItemInMainHand().getType() == Material.BOW) {
-                    arrowListener.startCameraShake(p);
-                }
-            } else {
-                // Snowball
-                p.getInventory().addItem(new ItemStack(Material.SNOWBALL, 1));
-                Bukkit.broadcastMessage("§b❄ " + gp.getPlayerName() + " mendapatkan §fSnowball§b!");
+        // Milestone 5 (every 5)
+        if (streak % 5 == 0 && !gp.hasRewardedStreak(streak)) {
+            ItemStack bow = new ItemStack(Material.BOW);
+            ItemMeta meta = bow.getItemMeta();
+            meta.setUnbreakable(false);
+            if (meta instanceof org.bukkit.inventory.meta.Damageable dmg) {
+                dmg.setDamage(383); // 1/384 durability
             }
+            bow.setItemMeta(meta);
+            p.getInventory().addItem(bow);
+            p.getInventory().addItem(new ItemStack(Material.ARROW, 1));
+            gp.markStreakReward(streak);
+            Bukkit.broadcastMessage("§e🏹 " + gp.getPlayerName() + " §amendapat §6Bow & Arrow§a! (Streak: §e" + streak + "§a)");
+        }
+    }
+
+    private void checkStreakRewardForAll() {
+        for (GamePlayer gp : registeredPlayers.values()) {
+            checkStreakReward(gp);
         }
     }
 
@@ -592,12 +605,12 @@ public class GameManager {
     }
 
     private int[] getLavaRiseRange(int questionNum) {
-        if (questionNum <= 2)  return new int[]{1, 2};
-        if (questionNum <= 5)  return new int[]{2, 3};
-        if (questionNum <= 10) return new int[]{3, 5};
-        if (questionNum <= 15) return new int[]{3, 7};
-        if (questionNum <= 20) return new int[]{5, 9};
-        return new int[]{7, 10};
+        if (questionNum <= 3)  return new int[]{0, 1};      // Q1-3: 0-1 block (gentle start)
+        if (questionNum <= 8)  return new int[]{1, 2};      // Q4-8: 1-2 block (slow ramp)
+        if (questionNum <= 12) return new int[]{2, 3};      // Q9-12: 2-3 block
+        if (questionNum <= 15) return new int[]{2, 4};      // Q13-15: 2-4 block
+        if (questionNum <= 20) return new int[]{3, 5};      // Q16-20: 3-5 block
+        return new int[]{4, 6};                              // Q21+: 4-6 block
     }
 
     // ═══ CEK BOT MATI KENA LAVA ════════════════════════════════════════════════
@@ -625,7 +638,7 @@ public class GameManager {
         String tag = gp.isBot() ? " §7[BOT]" : "";
         Bukkit.broadcastMessage("§c💀 " + playerName + tag + " terkena LAVA! §7(-" + deduction + " poin, sisa: §e" + gp.getPoint() + "§7)");
 
-        // Set spectator untuk player asli
+        // Set spectator untuk player asli (beri delay agar death screen tidak skip)
         if (!gp.isBot()) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 Player p = gp.getPlayer();
@@ -633,7 +646,7 @@ public class GameManager {
                     p.setGameMode(GameMode.SPECTATOR);
                     p.sendMessage("§cKamu terkena lava! Sekarang spectator.");
                 }
-            }, 1L);
+            }, 100L);
         } else {
             // Remove villager
             Villager v = gp.getVillager();
@@ -724,6 +737,7 @@ public class GameManager {
                 Villager v = gp.getVillager();
                 if (v != null && !v.isDead()) v.remove();
             }
+            gp.resetStreak();
         }
         botManager.reset();
         registeredPlayers.clear();

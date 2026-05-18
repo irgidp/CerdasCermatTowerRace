@@ -53,3 +53,308 @@ questions:
   q15:
     soal: "Berapa hasil dari 36 / 6 x 7?"
     jawaban: "42"
+  e1:
+    soal: "Istilah Jepang Dokuritsu Junbi Cosakai merujuk pada panitia?"
+    jawaban: "BPUPKI"
+  e2:
+    soal: "Apa lambang kimia untuk unsur Oksigen?"
+    jawaban: "O"
+  e3:
+    soal: "Sistem ekonomi yang mengandalkan kebebasan pasar sepenuhnya disebut?"
+    jawaban: "Kapitalis"
+  e4:
+    soal: "Benua terbesar di dunia adalah benua?"
+    jawaban: "Asia"
+  e5:
+    soal: "Zat yang mempercepat laju reaksi kimia tanpa ikut terkonsumsi?"
+    jawaban: "Katalis"
+  e6:
+    soal: "Turunan pertama dari fungsi trigonometri sinus adalah?"
+    jawaban: "Kosinus"
+  e7:
+    soal: "Dalam ekonomi, tempat bertemunya kurva permintaan dan penawaran?"
+    jawaban: "Pasar"
+  e8:
+    soal: "Apa nama mata uang negara Korea?"
+    jawaban: "Won"
+  e9:
+    soal: "Partikel subatomik yang memiliki muatan listrik negatif?"
+    jawaban: "Elektron"
+  e10:
+    soal: "Simbol kimia dua huruf yang digunakan untuk menyatakan derajat keasaman?"
+    jawaban: "pH"
+  e11:
+    soal: "Hewan pemakan daging disebut?"
+    jawaban: "Karnivora"
+  e12:
+    soal: "Hukum Newton III menyatakan bahwa setiap gaya aksi selalu ada gaya?"
+    jawaban: "Reaksi"
+  e13:
+    soal: "Zat hijau daun pada tumbuhan disebut?"
+    jawaban: "Klorofil"
+  e14:
+    soal: "Singkatan lembaga tinggi negara yang berhak memberhentikan presiden?"
+    jawaban: "MPR"
+  e15:
+    soal: "Puisi lama Indonesia yang bersajak a-b-a-b disebut?"
+    jawaban: "Pantun"
+  e16:
+    soal: "Gunung tertinggi di dunia adalah Gunung?"
+    jawaban: "Everest"
+  e17:
+    soal: "Singkatan dari Perserikatan Bangsa-Bangsa adalah?"
+    jawaban: "PBB"
+  e18:
+    soal: "Apa warna bendera Indonesia di bagian atas?"
+    jawaban: "Merah"
+  e19:
+    soal: "Berapa hasil dari 50 + 75?"
+    jawaban: "125"
+  e20:
+    soal: "Mamalia laut cerdas yang suka melompat di air?"
+    jawaban: "Lumba-lumba"
+  e21:
+    soal: "Benda langit yang bersinar di malam hari karena pantulan cahaya matahari?"
+    jawaban: "Bulan"
+  e22:
+    soal: "Apa bahasa Inggris dari 'Buku'?"
+    jawaban: "Book"
+  e23:
+    soal: "Antonim atau lawan kata dari 'Rajin' adalah?"
+    jawaban: "Malas"
+  e24:
+    soal: "Organ utama untuk bernapas pada ikan adalah?"
+    jawaban: "Insang"
+  e25:
+    soal: "Nama belakang ilmuwan penemu bola lampu pijar?"
+    jawaban: "Edison"
+  e26:
+    soal: "Satu abad sama dengan berapa tahun?"
+    jawaban: "100"
+  e27:
+    soal: "Ibukota negara Jepang adalah?"
+    jawaban: "Tokyo"
+  e28:
+    soal: "Apa rasa alami dari air laut?"
+    jawaban: "Asin"
+  e29:
+    soal: "Berapa hasil dari 9 x 8?"
+    jawaban: "72"
+  e30:
+    soal: "Hewan mamalia berleher paling panjang di dunia?"
+    jawaban: "Jerapah"
+  e31:
+    soal: "Sila pertama Pancasila dilambangkan dengan gambar?"
+    jawaban: "Bintang"
+  e32:
+    soal: "Alat indra untuk penciuman pada manusia?"
+    jawaban: "Hidung"
+  e33:
+    soal: "Garis yang membelah bumi menjadi kutub utara dan selatan?"
+    jawaban: "Khatulistiwa"
+
+  # ==========================================
+  # 33 Soal - Medium (m1 - m33)
+  # ==========================================
+  m1:
+    soal: "Enzim pemecah protein yang terdapat di dalam lambung manusia?"
+    jawaban: "Pepsin"
+  m2:
+    soal: "Satuan Sistem Internasional untuk besaran gaya?"
+    jawaban: "Newton"
+  m3:
+    soal: "Peristiwa makan dan dimakan antar organisme disebut rantai?"
+    jawaban: "Makanan"
+  m4:
+    soal: "Kerajaan Hindu tertua di Indonesia adalah Kerajaan?"
+    jawaban: "Kutai"
+  m5:
+    soal: "Gelar R.A. yang menulis buku Habis Gelap Terbitlah Terang?"
+    jawaban: "Kartini"
+  m6:
+    soal: "Nama belakang Bapak Proklamator yang mendampingi Soekarno?"
+    jawaban: "Hatta"
+  m7:
+    soal: "Lapisan atmosfer tempat terjadinya fenomena cuaca adalah?"
+    jawaban: "Troposfer"
+  m8:
+    soal: "Unsur kimia dengan lambang Fe adalah?"
+    jawaban: "Besi"
+  m9:
+    soal: "Batuan yang terbentuk dari magma yang membeku disebut batuan?"
+    jawaban: "Beku"
+  m10:
+    soal: "Superbenua purba sebelum terpecah-pecah menjadi benua saat ini disebut?"
+    jawaban: "Pangea"
+  m11:
+    soal: "Danau vulkanik terbesar di Indonesia adalah Danau?"
+    jawaban: "Toba"
+  m12:
+    soal: "Berapa akar kuadrat dari 144?"
+    jawaban: "12"
+  m13:
+    soal: "Organel sel yang berfungsi sebagai tempat respirasi seluler?"
+    jawaban: "Mitokondria"
+  m14:
+    soal: "Nama unsur kimia untuk lambang Au?"
+    jawaban: "Emas"
+  m15:
+    soal: "Hormon yang memacu pertumbuhan pada ujung batang tanaman?"
+    jawaban: "Auksin"
+  m16:
+    soal: "Turunan pertama dari x kuadrat (x^2) adalah?"
+    jawaban: "2x"
+  m17:
+    soal: "Proses tumbuhan memasak makanannya sendiri dibantu cahaya matahari?"
+    jawaban: "Fotosintesis"
+  m18:
+    soal: "Candi Buddha terbesar peninggalan wangsa Syailendra?"
+    jawaban: "Borobudur"
+  m19:
+    soal: "Suku asli yang mendiami benua Australia?"
+    jawaban: "Aborigin"
+  m20:
+    soal: "Cabang biologi yang khusus mempelajari pewarisan sifat?"
+    jawaban: "Genetika"
+  m21:
+    soal: "Nama sumpah yang diucapkan oleh Mahapatih Gajah Mada?"
+    jawaban: "Palapa"
+  m22:
+    soal: "Garis bujur 0 derajat melewati sebuah kota di Inggris yang bernama?"
+    jawaban: "Greenwich"
+  m23:
+    soal: "Ibukota provinsi Banten saat ini?"
+    jawaban: "Serang"
+  m24:
+    soal: "Nama belakang tokoh bapak pendidikan nasional Indonesia, Ki Hajar?"
+    jawaban: "Dewantara"
+  m25:
+    soal: "Satuan Sistem Internasional untuk suhu mutlak?"
+    jawaban: "Kelvin"
+  m26:
+    soal: "Istilah medis atau ilmiah untuk sel darah putih?"
+    jawaban: "Leukosit"
+  m27:
+    soal: "Ibukota negara Australia?"
+    jawaban: "Canberra"
+  m28:
+    soal: "Nama belakang penjelajah yang menemukan benua Amerika tahun 1492?"
+    jawaban: "Columbus"
+  m29:
+    soal: "Pusat pengendali seluruh kegiatan di dalam sel biologi?"
+    jawaban: "Nukleus"
+  m30:
+    soal: "Tari Saman yang populer berasal dari provinsi?"
+    jawaban: "Aceh"
+  m31:
+    soal: "Wujud zat yang volumenya tetap namun bentuknya mengikuti wadah?"
+    jawaban: "Cair"
+  m32:
+    soal: "Satuan Sistem Internasional untuk besaran tekanan?"
+    jawaban: "Pascal"
+  m33:
+    soal: "Perubahan wujud dari gas menjadi padat disebut?"
+    jawaban: "Mengkristal"
+
+  # ==========================================
+  # 33 Soal - Hard (h1 - h33)
+  # ==========================================
+  h1:
+    soal: "Berapa nilai logaritma basis 10 dari angka 1000?"
+    jawaban: "3"
+  h2:
+    soal: "Gas mulia yang paling banyak kandungannya di atmosfer bumi?"
+    jawaban: "Argon"
+  h3:
+    soal: "Berapa nilai trigonometri dari sinus 90 derajat?"
+    jawaban: "1"
+  h4:
+    soal: "Pahlawan nasional yang menjadi pemimpin Perang Jawa (1825-1830)?"
+    jawaban: "Diponegoro"
+  h5:
+    soal: "Asam kuat di lambung manusia utamanya berupa asam?"
+    jawaban: "Klorida"
+  h6:
+    soal: "Negara merdeka terkecil di dunia secara luas wilayah?"
+    jawaban: "Vatikan"
+  h7:
+    soal: "Teori masuknya pengaruh Hindu-Buddha yang dibawa oleh golongan prajurit?"
+    jawaban: "Ksatria"
+  h8:
+    soal: "Rumus molekul untuk gas Karbondioksida?"
+    jawaban: "CO2"
+  h9:
+    soal: "Perjanjian tahun 1494 yang membagi wilayah dunia antara Spanyol dan Portugis?"
+    jawaban: "Tordesillas"
+  h10:
+    soal: "Satuan dasar Sistem Internasional (SI) untuk intensitas cahaya?"
+    jawaban: "Candela"
+  h11:
+    soal: "Organisme uniseluler yang bergerak dengan pseudopodia atau kaki semu?"
+    jawaban: "Amoeba"
+  h12:
+    soal: "Ibukota negara Kanada?"
+    jawaban: "Ottawa"
+  h13:
+    soal: "Nama depan sastrawan penulis tetralogi buru seperti Bumi Manusia?"
+    jawaban: "Pramoedya"
+  h14:
+    soal: "Filsuf Yunani kuno penulis The Republic yang juga murid Socrates?"
+    jawaban: "Plato"
+  h15:
+    soal: "Siklus reaksi gelap pada proses fotosintesis disebut siklus?"
+    jawaban: "Calvin"
+  h16:
+    soal: "Lambang huruf kecil yang digunakan untuk konstanta Planck dalam fisika kuantum?"
+    jawaban: "h"
+  h17:
+    soal: "Ibukota negara Turki (bukan kota terbesarnya)?"
+    jawaban: "Ankara"
+  h18:
+    soal: "Istilah ekonomi untuk fenomena kenaikan harga barang dan jasa secara umum?"
+    jawaban: "Inflasi"
+  h19:
+    soal: "Senyawa karbohidrat struktural penyusun utama dinding sel jamur/fungi?"
+    jawaban: "Kitin"
+  h20:
+    soal: "Kelompok besar tumbuhan berbiji terbuka secara ilmiah disebut?"
+    jawaban: "Gymnospermae"
+  h21:
+    soal: "Nama belakang ilmuwan yang dijuluki Bapak Ekonomi Makro Modern?"
+    jawaban: "Keynes"
+  h22:
+    soal: "Lapisan plasma terluar matahari yang hanya bisa dilihat jelas saat gerhana matahari total?"
+    jawaban: "Korona"
+  h23:
+    soal: "Nama kimia lain dari vitamin C adalah asam?"
+    jawaban: "Askorbat"
+  h24:
+    soal: "Bentuk pemerintahan yang kekuasaannya dikendalikan oleh sekelompok kecil elit/hartawan?"
+    jawaban: "Oligarki"
+  h25:
+    soal: "Nama belakang ilmuwan Skotlandia yang pertama kali menemukan antibiotik penisilin?"
+    jawaban: "Fleming"
+  h26:
+    soal: "Singkatan dari batas laut eksklusif sejauh 200 mil dari garis pantai?"
+    jawaban: "ZEE"
+  h27:
+    soal: "Nama belakang Sosiolog pencetus konsep 'fakta sosial' dan studi bunuh diri (suicide)?"
+    jawaban: "Durkheim"
+  h28:
+    soal: "Organ utama sistem ekskresi pada kelompok serangga adalah pembuluh?"
+    jawaban: "Malpighi"
+  h29:
+    soal: "Satuan turunan SI untuk besaran fluks magnetik?"
+    jawaban: "Weber"
+  h30:
+    soal: "Jenis awan level tinggi yang tampak tipis berserat seperti bulu burung?"
+    jawaban: "Sirus"
+  h31:
+    soal: "Hormon dari kelenjar pankreas yang bertugas utama menurunkan kadar glukosa darah?"
+    jawaban: "Insulin"
+  h32:
+    soal: "Ibukota negara Brasil?"
+    jawaban: "Brasilia"
+  h33:
+    soal: "Benua terkecil di dunia dari segi luas daratan?"
+    jawaban: "Australia"

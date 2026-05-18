@@ -22,8 +22,9 @@ public final class CerdasCermatTowerRace extends JavaPlugin {
         getCommand("startboard").setExecutor(new StartBoardCommand(gameManager));
         getCommand("startgame").setExecutor(new StartGameCommand(gameManager));
         getCommand("setsoal").setExecutor(new SetSoalCommand(gameManager));
+        getCommand("settimer").setExecutor(new SetTimerCommand(gameManager));
         getCommand("resetgame").setExecutor((sender, cmd, label, args) -> {
-            if (!sender.hasPermission("mathtower.admin")) {
+            if (!sender.hasPermission("cerdasCermatTowerRace.admin")) {
                 sender.sendMessage("§cTidak punya izin!");
                 return true;
             }
@@ -41,8 +42,8 @@ public final class CerdasCermatTowerRace extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EntityDamageListener(gameManager), this);
 
         getLogger().info("╔══════════════════════════════════════╗");
-        getLogger().info("║     MathTowerRace v2 ENABLED! 🏆    ║");
-        getLogger().info("║  /addbot <nama> [easy|medium|hard]  ║");
+        getLogger().info("║ Cerdas Cermat Tower Race ENABLED! 🏆 ║");
+        getLogger().info("║  /addbot <nama> [easy|medium|hard]   ║");
         getLogger().info("╚══════════════════════════════════════╝");
     }
 

@@ -24,6 +24,12 @@ public class GamePlayer {
     // Ranking akhir saat mati (1 = juara 1 / pemenang, dst dari belakang)
     private int finalRank = 0;
 
+    // ═══ STREAK SYSTEM ═══════════════════════════════════════════
+    // Track correct answer streak (reset saat jawab salah)
+    private int correctStreak = 0;
+    // Track which streak milestones sudah di-reward (3, 6, 9... dan 5, 10, 15...)
+    private final java.util.Set<Integer> rewardedStreakMilestones = new java.util.HashSet<>();
+
     /** Constructor untuk PLAYER ASLI */
     public GamePlayer(String playerName, Player player, int slot) {
         this.playerName = playerName;
@@ -82,6 +88,26 @@ public class GamePlayer {
     public void lowerPlatform(int blocks)   { this.platformY = Math.max(0, this.platformY - blocks); }
     public void addPoint(int amount)        { this.point += amount; }
     public void deductPoint(int amount)     { this.point -= amount; }
+
+    // ═══ STREAK TRACKING METHODS ═════════════════════════════════
+    public int getCorrectStreak()           { return correctStreak; }
+
+    public void incrementStreak() {
+        this.correctStreak++;
+    }
+
+    public void resetStreak() {
+        this.correctStreak = 0;
+        this.rewardedStreakMilestones.clear();
+    }
+
+    public boolean hasRewardedStreak(int milestone) {
+        return rewardedStreakMilestones.contains(milestone);
+    }
+
+    public void markStreakReward(int milestone) {
+        this.rewardedStreakMilestones.add(milestone);
+    }
 
     public World getEffectiveWorld() {
         if (player != null) return player.getWorld();

@@ -37,7 +37,7 @@ public class RegisCommand implements CommandExecutor {
             int slot = gm.getGamePlayer(playerName).getSlot();
             sender.sendMessage("§a✓ " + playerName + " berhasil didaftarkan ke §6Slot " + slot + "§a!");
             // Broadcast ke semua player
-            org.bukkit.Bukkit.broadcastMessage("§a[MathRace] §f" + playerName + " telah bergabung! §7(Slot " + slot + ")");
+            org.bukkit.Bukkit.broadcastMessage("§a[Cerdas Cermat Tower Race] §f" + playerName + " telah bergabung! §7(Slot " + slot + ")");
         }
 
         return true;

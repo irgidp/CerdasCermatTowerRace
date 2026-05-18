@@ -53,10 +53,10 @@ public class BotManager {
 
     /**
      * Trigger semua bot untuk jawab soal setelah delay.
-     * Waktu jawab disesuaikan sistem baru (max 25 detik):
-     *   HARD   → 1-4 detik  (+5/+4 block)
-     *   MEDIUM → 5-14 detik (+4/+3/+2 block)
-     *   EASY   → 15-27 detik (+1/+0 block)
+     * Waktu jawab disesuaikan sistem baru (mengikuti timer soal):
+     *   HARD   → cepat
+     *   MEDIUM → sedang
+     *   EASY   → lambat (tapi tetap sebelum timeout)
      */
     public void triggerBotAnswers(Question question) {
         cancelAllTasks();
@@ -94,12 +94,38 @@ public class BotManager {
             BotLevel[] levels = {BotLevel.EASY, BotLevel.MEDIUM, BotLevel.HARD};
             effective = levels[rng.nextInt(levels.length)];
         }
-        return switch (effective) {
-            case HARD   -> 20  + rng.nextInt(60);   // 1-4 detik → +5 atau +4 block
-            case MEDIUM -> 100 + rng.nextInt(180);  // 5-14 detik → +4/+3/+2 block
-            case EASY   -> 300 + rng.nextInt(200);  // 15-25 detik → +1/+0 block
-            default     -> 300;
-        };
+
+        int maxSeconds = Math.max(5, gameManager.getQuestionTimeSeconds());
+        int maxTicks = Math.max(1, maxSeconds * 20 - 1); // Pastikan sebelum timeout
+
+        int minTicks;
+        int maxRangeTicks;
+        switch (effective) {
+            case HARD -> {
+                minTicks = 20;
+                maxRangeTicks = (int) (maxTicks * 0.3);
+            }
+            case MEDIUM -> {
+                minTicks = (int) (maxTicks * 0.35);
+                maxRangeTicks = (int) (maxTicks * 0.7);
+            }
+            case EASY -> {
+                minTicks = (int) (maxTicks * 0.7);
+                maxRangeTicks = (int) (maxTicks * 0.95);
+            }
+            default -> {
+                minTicks = (int) (maxTicks * 0.7);
+                maxRangeTicks = maxTicks;
+            }
+        }
+
+        if (maxRangeTicks <= minTicks) {
+            maxRangeTicks = Math.min(maxTicks, minTicks + 1);
+        }
+
+        int range = Math.max(1, maxRangeTicks - minTicks + 1);
+        int delay = minTicks + rng.nextInt(range);
+        return Math.min(delay, maxTicks);
     }
 
     public void cancelAllTasks() {
