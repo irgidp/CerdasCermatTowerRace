@@ -18,6 +18,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 
+import yt.corazonid.cerdasCermatTowerRace.util.TitleUtil;
+
 public class GameManager {
 
     private final CerdasCermatTowerRace plugin;
@@ -295,8 +297,7 @@ public class GameManager {
         this.nextLavaRise = lavaRange[0] + new Random().nextInt(lavaRange[1] - lavaRange[0] + 1);
 
         Bukkit.broadcastMessage("§b§l══════════════════════════════");
-        Bukkit.broadcastMessage("§b§l  📐 SOAL #" + questionNumber);
-        Bukkit.broadcastMessage("§f  " + q.getSoal());
+        TitleUtil.broadcastTitle(plugin.getServer(), "§9§nSOAL #" + questionNumber, "§f" + q.getSoal(), 10, 140, 10);
         Bukkit.broadcastMessage("§7  Ketik jawaban langsung di chat! (maks §e" + questionTimeSeconds + " detik§7)");
         Bukkit.broadcastMessage("§c  🌋 Lava akan naik §f" + this.nextLavaRise + " §cblock setelah soal ini!");
         Bukkit.broadcastMessage("§b§l══════════════════════════════");
